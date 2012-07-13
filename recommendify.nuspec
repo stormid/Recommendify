@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>Recommendify</id>
+    <version>0.0.0-alpha</version>
+    <authors>Rory Fitzpatrick</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>.NET/redis based recommendation engine (collaborative filtering)</description>
+    <language>en-GB</language>
+	<copyright>Rory Fitzpatrick, Storm ID Ltd.</copyright>
+    <licenseUrl>https://github.com/roryf/Recommendify/blob/master/license.txt</licenseUrl>
+    <projectUrl>https://github.com/roryf/Recommendify</projectUrl>
+    <tags>recommendation</tags>
+  </metadata>
+  <files>
+    <file src="build\release\Recommendify.dll" target="lib\net40" />
+    <file src="build\release\Recommendify.pdb" target="lib\net40" />
+  </files>
+</package>
