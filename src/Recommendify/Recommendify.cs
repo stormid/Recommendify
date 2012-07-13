@@ -5,6 +5,7 @@ namespace Recommendify
     public class Recommendify
     {
         public const int DEFAULT_MAX_NEIGHBOURS = 50;
+        public const string DEFAULT_REDIS_PREFIX = "recommendify";
 
         internal static IRedisClient RedisClient { get; private set; }
     }

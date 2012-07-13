@@ -4,21 +4,19 @@ using System.Linq;
 
 namespace Recommendify
 {
-    public abstract class Base : DynamicObject
+    public abstract class Base
     {
         public SimilarityMatrix SimilarityMatrix { get; private set; }
         public IDictionary<string, InputMatrix> InputMatrices { get; private set; }
         public int MaxNeighbours { get; set; }
 
-        public const string RedisPrefix = "recommendify";
+        public Base() : this(Recommendify.DEFAULT_MAX_NEIGHBOURS, Recommendify.DEFAULT_REDIS_PREFIX) { }
 
-        public Base() : this(Recommendify.DEFAULT_MAX_NEIGHBOURS) { }
-
-        public Base(int maxNeighbours)
+        public Base(int maxNeighbours, string redisPrefix)
         {
             MaxNeighbours = maxNeighbours;
             InputMatrices = InitializeMatrices();
-            SimilarityMatrix = new SimilarityMatrix(new Options {Key = "similarities", MaxNeighbours = MaxNeighbours, RedisPrefix = RedisPrefix});
+            SimilarityMatrix = new SimilarityMatrix(new Options {Key = "similarities", MaxNeighbours = MaxNeighbours, RedisPrefix = redisPrefix});
         }
 
         protected abstract IDictionary<string, InputMatrix> InitializeMatrices();
@@ -26,17 +24,6 @@ namespace Recommendify
         public InputMatrix this[string key]
         {
             get { return InputMatrices[key]; }
-        }
-
-        public override bool TryGetMember(GetMemberBinder binder, out object result)
-        {
-            if (InputMatrices.ContainsKey(binder.Name))
-            {
-                result = InputMatrices[binder.Name];
-                return true;
-            }
-            result = null;
-            return false;
         }
 
         public IEnumerable<string> AllItems()
