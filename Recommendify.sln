@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recommendify", "Recommendify\Recommendify.csproj", "{95CF3364-133B-42E0-8CAB-F1F8BDF1377A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recommendify", "src\Recommendify\Recommendify.csproj", "{95CF3364-133B-42E0-8CAB-F1F8BDF1377A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recommendify.Specs", "Recommendify.Specs\Recommendify.Specs.csproj", "{FBF2738B-5D2F-4516-89BE-1BFDE1D472AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recommendify.Specs", "src\Recommendify.Specs\Recommendify.Specs.csproj", "{FBF2738B-5D2F-4516-89BE-1BFDE1D472AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1805E134-A5BC-4994-8C0B-9D9B5253B0D2}"
 	ProjectSection(SolutionItems) = preProject
