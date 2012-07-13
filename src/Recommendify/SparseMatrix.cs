@@ -60,7 +60,12 @@ namespace Recommendify
 
         private decimal KGet(string key)
         {
-            return decimal.Parse(Recommendify.RedisClient.Hashes[RedisKey][key]);
+            var value = Recommendify.RedisClient.Hashes[RedisKey][key];
+            if (!string.IsNullOrEmpty(value))
+            {
+                return decimal.Parse(value);
+            }
+            return 0m;
         }
 
         private void KIncr(string key)
@@ -68,7 +73,7 @@ namespace Recommendify
             Recommendify.RedisClient.Hashes[RedisKey].IncrementValue(key, 1);
         }
 
-        internal void KDelAll(string[] keys)
+        internal /* I just puked a little */ void KDelAll(string[] keys)
         {
             foreach (var key in Recommendify.RedisClient.Hashes[RedisKey].Keys)
             {
