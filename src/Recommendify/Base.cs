@@ -7,24 +7,29 @@ namespace Recommendify
 {
     public abstract class Base
     {
-        private readonly IRedisClient redisClient;
+        protected readonly IRedisClient RedisClient;
         public SimilarityMatrix SimilarityMatrix { get; private set; }
         public IDictionary<string, InputMatrix> InputMatrices { get; private set; }
         public int MaxNeighbours { get; set; }
+        public string RedisPrefix { get; set; }
 
         public Base(IRedisClient redisClient) : this(Recommendify.DEFAULT_MAX_NEIGHBOURS, Recommendify.DEFAULT_REDIS_PREFIX, redisClient) { }
 
         public Base(int maxNeighbours, string redisPrefix, IRedisClient redisClient)
         {
-            this.redisClient = redisClient;
+            RedisClient = redisClient;
             MaxNeighbours = maxNeighbours;
-            InputMatrices = InitializeMatrices();
+            RedisPrefix = redisPrefix;
+            InputMatrices = new Dictionary<string, InputMatrix>();
             SimilarityMatrix = new SimilarityMatrix(
-                    new Options {Key = "similarities", MaxNeighbours = MaxNeighbours, RedisPrefix = redisPrefix},
+                    new Options {Key = "similarities", MaxNeighbours = MaxNeighbours, RedisPrefix = RedisPrefix},
                     redisClient);
         }
 
-        protected abstract IDictionary<string, InputMatrix> InitializeMatrices();
+        public void InputMatrix(string key, InputMatrix inputMatrix)
+        {
+            InputMatrices[key] = inputMatrix;
+        }
 
         public InputMatrix this[string key]
         {
