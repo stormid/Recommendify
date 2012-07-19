@@ -1,4 +1,5 @@
-﻿using ServiceStack.Redis;
+﻿using Machine.Specifications;
+using ServiceStack.Redis;
 
 namespace Recommendify.Specs
 {
@@ -19,5 +20,7 @@ namespace Recommendify.Specs
                 redisClient.Remove(key);
             }
         }
+
+        Cleanup after = () => FlushRedis(RedisClient);
     }
 }
