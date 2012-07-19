@@ -1,14 +1,17 @@
 ﻿using System.Linq;
+using ServiceStack.Redis;
 
 namespace Recommendify
 {
     public class SparseMatrix
     {
         private readonly Options options;
+        private readonly IRedisClient redisClient;
 
-        public SparseMatrix(Options options)
+        public SparseMatrix(Options options, IRedisClient redisClient)
         {
             this.options = options;
+            this.redisClient = redisClient;
         }
 
         public string RedisKey
@@ -50,17 +53,17 @@ namespace Recommendify
 
         private void KSet(string key, decimal value)
         {
-            Recommendify.RedisClient.Hashes[RedisKey][key] = value.ToString();
+            redisClient.Hashes[RedisKey][key] = value.ToString();
         }
 
         private void KDel(string key)
         {
-            Recommendify.RedisClient.Hashes[RedisKey].Remove(key);
+            redisClient.Hashes[RedisKey].Remove(key);
         }
 
         private decimal KGet(string key)
         {
-            var value = Recommendify.RedisClient.Hashes[RedisKey][key];
+            var value = redisClient.Hashes[RedisKey][key];
             if (!string.IsNullOrEmpty(value))
             {
                 return decimal.Parse(value);
@@ -70,16 +73,16 @@ namespace Recommendify
 
         private void KIncr(string key)
         {
-            Recommendify.RedisClient.Hashes[RedisKey].IncrementValue(key, 1);
+            redisClient.Hashes[RedisKey].IncrementValue(key, 1);
         }
 
         internal /* I just puked a little */ void KDelAll(string[] keys)
         {
-            foreach (var key in Recommendify.RedisClient.Hashes[RedisKey].Keys)
+            foreach (var key in redisClient.Hashes[RedisKey].Keys)
             {
                 if (keys.Contains(key))
                 {
-                    Recommendify.RedisClient.Hashes[RedisKey].Remove(key);
+                    redisClient.Hashes[RedisKey].Remove(key);
                 }
             }
         }

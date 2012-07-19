@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ServiceStack.Redis;
 
 namespace Recommendify
 {
@@ -8,10 +9,12 @@ namespace Recommendify
     {
         private IDictionary<string, IDictionary<string, decimal>> writeQueue;
         private Options options;
+        private readonly IRedisClient redisClient;
 
-        public SimilarityMatrix(Options options)
+        public SimilarityMatrix(Options options, IRedisClient redisClient)
         {
             this.options = options;
+            this.redisClient = redisClient;
             writeQueue = new Dictionary<string, IDictionary<string, decimal>>();
         }
 
@@ -65,13 +68,13 @@ namespace Recommendify
         public void CommitItem(string itemId)
         {
             var serialized = SerializeItem(itemId);
-            Recommendify.RedisClient.Hashes[RedisKey()][itemId] = serialized;
+            redisClient.Hashes[RedisKey()][itemId] = serialized;
             writeQueue.Remove(itemId);
         }
 
         public IDictionary<string, decimal> RetrieveItem(string itemId)
         {
-            var data = Recommendify.RedisClient.Hashes[RedisKey()][itemId];
+            var data = redisClient.Hashes[RedisKey()][itemId];
 
             if (string.IsNullOrEmpty(data))
             {

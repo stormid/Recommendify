@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ServiceStack.Redis;
 
 namespace Recommendify
 {
     public class JaccardInputMatrix : InputMatrix
     {
-        private CCMatrix ccmatrix;
+        private readonly IRedisClient redisClient;
+        private readonly CCMatrix ccmatrix;
 
-        public JaccardInputMatrix(Options options) : base(options)
+        public JaccardInputMatrix(Options options, IRedisClient redisClient) : base(options)
         {
-            ccmatrix = new CCMatrix(options);
+            this.redisClient = redisClient;
+            ccmatrix = new CCMatrix(options, redisClient);
         }
 
         public override decimal Similarity(string item1, string item2)

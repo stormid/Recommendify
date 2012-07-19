@@ -1,17 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ServiceStack.Redis;
 
 namespace Recommendify
 {
     public class CCMatrix
     {
         private readonly Options options;
+        private readonly IRedisClient redisClient;
         public SparseMatrix Matrix { get; private set; }
 
-        public CCMatrix(Options options)
+        public CCMatrix(Options options, IRedisClient redisClient)
         {
             this.options = options;
-            Matrix = new SparseMatrix(new Options { Key = string.Format("{0}:{1}", options.Key, "ccmatrix"), MaxNeighbours = options.MaxNeighbours, RedisPrefix = options.RedisPrefix, Weight = options.Weight});
+            this.redisClient = redisClient;
+            Matrix = new SparseMatrix(
+                    new Options
+                    {
+                        Key = string.Format("{0}:{1}", options.Key, "ccmatrix"),
+                        MaxNeighbours = options.MaxNeighbours,
+                        RedisPrefix = options.RedisPrefix,
+                        Weight = options.Weight
+                    }, redisClient);
         }
 
         public string RedisKey()
@@ -49,12 +59,12 @@ namespace Recommendify
 
         public IEnumerable<string> AllItems()
         {
-            return Recommendify.RedisClient.Hashes[RedisKey("items")].Keys;
+            return redisClient.Hashes[RedisKey("items")].Keys;
         }
 
         public void DeleteItem(string itemId)
         {
-            Recommendify.RedisClient.Hashes[RedisKey("items")].Remove(itemId);
+            redisClient.Hashes[RedisKey("items")].Remove(itemId);
             Matrix.KDelAll(new[] { itemId });
         }
 
@@ -69,12 +79,12 @@ namespace Recommendify
 
         private void ItemCountIncr(string key)
         {
-            Recommendify.RedisClient.Hashes[RedisKey("items")].IncrementValue(key, 1);
+            redisClient.Hashes[RedisKey("items")].IncrementValue(key, 1);
         }
 
         public int ItemCount(string key)
         {
-            return int.Parse(Recommendify.RedisClient.Hashes[RedisKey("items")][key]);
+            return int.Parse(redisClient.Hashes[RedisKey("items")][key]);
         }
     }
 }

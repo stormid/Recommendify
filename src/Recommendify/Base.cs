@@ -1,22 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using ServiceStack.Redis;
 
 namespace Recommendify
 {
     public abstract class Base
     {
+        private readonly IRedisClient redisClient;
         public SimilarityMatrix SimilarityMatrix { get; private set; }
         public IDictionary<string, InputMatrix> InputMatrices { get; private set; }
         public int MaxNeighbours { get; set; }
 
-        public Base() : this(Recommendify.DEFAULT_MAX_NEIGHBOURS, Recommendify.DEFAULT_REDIS_PREFIX) { }
+        public Base(IRedisClient redisClient) : this(Recommendify.DEFAULT_MAX_NEIGHBOURS, Recommendify.DEFAULT_REDIS_PREFIX, redisClient) { }
 
-        public Base(int maxNeighbours, string redisPrefix)
+        public Base(int maxNeighbours, string redisPrefix, IRedisClient redisClient)
         {
+            this.redisClient = redisClient;
             MaxNeighbours = maxNeighbours;
             InputMatrices = InitializeMatrices();
-            SimilarityMatrix = new SimilarityMatrix(new Options {Key = "similarities", MaxNeighbours = MaxNeighbours, RedisPrefix = redisPrefix});
+            SimilarityMatrix = new SimilarityMatrix(
+                    new Options {Key = "similarities", MaxNeighbours = MaxNeighbours, RedisPrefix = redisPrefix},
+                    redisClient);
         }
 
         protected abstract IDictionary<string, InputMatrix> InitializeMatrices();
