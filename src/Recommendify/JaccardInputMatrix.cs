@@ -53,7 +53,7 @@ namespace Recommendify
         private decimal CalculateJaccardCached(string item1, string item2)
         {
             var value = ccmatrix.Matrix.Get(item1, item2);
-            return value / (ccmatrix.ItemCount(item1) + ccmatrix.ItemCount(item2) - value);
+            return value / (ccmatrix.ItemCount(item1) + ccmatrix.ItemCount(item2));
         }
     }
 }
