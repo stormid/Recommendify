@@ -11,7 +11,7 @@ target compile:
 
 desc "Executes unit tests"
 target test, (compile):
-	mspec(assembly: test_assemblies, toolPath: "packages/Machine.Specifications.0.5.7/tools")
+	mspec(assembly: test_assemblies, toolPath: "packages/Machine.Specifications.0.5.10/tools")
 
 desc "Copies binaries to the build directory"
 target deploy:
