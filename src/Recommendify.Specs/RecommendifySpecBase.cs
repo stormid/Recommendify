@@ -9,7 +9,7 @@ namespace Recommendify.Specs
 
         protected static void EstablishRedisClient()
         {
-            RedisClient = new RedisClient();
+            RedisClient = new RedisClient(RedisSetup.RedisConnectionInfo.Host, RedisSetup.RedisConnectionInfo.Port);
             FlushRedis(RedisClient);
         }
 
